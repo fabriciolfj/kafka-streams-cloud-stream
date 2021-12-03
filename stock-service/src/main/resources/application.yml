@@ -34,5 +34,5 @@ spring:
               total.applicationId: total
               totalPerProduct.applicationId: totalPerProduct
               latestPerProduct.applicationId: latestPerProduct
-          function:
-            definition: orders;transactions;total;totalPerProduct;latestPerProduct
+      function:
+        definition: orders;transactions;total;totalPerProduct;latestPerProduct

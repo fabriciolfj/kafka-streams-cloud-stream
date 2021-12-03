@@ -61,10 +61,14 @@ public class OrderKafka {
 
     @Bean
     public Consumer<KStream<Long, Transaction>> total() {
+        log.info("Total iniciando");
         KeyValueBytesStoreSupplier storeSupplier = Stores.persistentKeyValueStore(
                 "all-transactions-store");
         return transactions -> transactions
-                .groupBy((k, v) -> v.getStatus(),
+                .groupBy((k, v) -> {
+                    log.info("Transaction: {}", v.toString());
+                    return v.getStatus();
+                        },
                         Grouped.with(Serdes.String(), new JsonSerde<>(Transaction.class)))
                 .aggregate(
                         TransactionTotal::new,

@@ -3,6 +3,9 @@ package com.github.fabriciolfj.kafkastream.config;
 import com.github.fabriciolfj.kafkastream.model.Order;
 import com.github.fabriciolfj.kafkastream.model.OrderType;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.integration.support.MessageBuilder;
@@ -13,15 +16,16 @@ import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Random;
 import java.util.function.Supplier;
 
 @Configuration
 @Slf4j
 public class OrderConfiguration {
 
-    private static long orderId = 100;
-    private static final Random r = new Random();
+    private static long orderId = 200;
+
+    @Autowired
+    private StreamBridge streamBridge;
 
     LinkedList<Order> buyOrders = new LinkedList<>(List.of(
             new Order(++orderId, 1, 1, 100, LocalDateTime.now(), OrderType.BUY, 1000),
@@ -71,5 +75,4 @@ public class OrderConfiguration {
             }
         };
     }
-
 }
