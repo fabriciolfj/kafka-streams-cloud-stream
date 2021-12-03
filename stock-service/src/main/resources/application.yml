@@ -10,7 +10,7 @@ spring:
       enabled: true
   kafka:
     bootstrap-servers:
-      - localhost:9092
+      - localhost:40991
 
   cloud:
     stream:
@@ -19,7 +19,7 @@ spring:
         orders-in-1.destination: order.sell
         transactions-in-0.destination: order.buy
         transactions-in-1.destination: order.sell
-        transactions-out-1.destination: transactions
+        transactions-out-0.destination: transactions
         total-in-0.destination: transactions
         totalPerProduct-in-0.destination: transactions
         totalPerProduct-in-1.destination: order.sell

@@ -3,7 +3,7 @@ spring:
     name: order-service
   kafka:
     bootstrap-servers:
-      - localhost:9092
+      - localhost:40991
 
   cloud:
     stream:

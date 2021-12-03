@@ -73,6 +73,8 @@ public class OrderKafka {
                 .aggregate(
                         TransactionTotal::new,
                         (k, v, a) -> {
+                            log.info("Total transaction a: {}", a.toString());
+                            log.info("Total transaction v: {}", v.toString());
                             a.setCount(a.getCount() + 1);
                             a.setProductCount(a.getProductCount() + v.getAmount());
                             a.setAmount(a.getAmount() + (v.getPrice() * v.getAmount()));
@@ -164,3 +166,5 @@ public class OrderKafka {
         return null;
     }
 }
+
+

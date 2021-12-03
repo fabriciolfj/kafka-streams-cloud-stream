@@ -22,7 +22,7 @@ import java.util.function.Supplier;
 @Slf4j
 public class OrderConfiguration {
 
-    private static long orderId = 200;
+    private static long orderId = 599;
 
     @Autowired
     private StreamBridge streamBridge;
