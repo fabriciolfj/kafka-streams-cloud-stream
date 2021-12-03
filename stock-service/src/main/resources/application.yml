@@ -1,0 +1,38 @@
+server:
+  port: 9090
+spring:
+  datasource:
+    url: jdbc:h2:mem:test
+    username: sa
+    password: sa
+  h2:
+    console:
+      enabled: true
+  kafka:
+    bootstrap-servers:
+      - localhost:9092
+
+  cloud:
+    stream:
+      bindings:
+        orders-in-0.destination: order.buy
+        orders-in-1.destination: order.sell
+        transactions-in-0.destination: order.buy
+        transactions-in-1.destination: order.sell
+        transactions-out-1.destination: transactions
+        total-in-0.destination: transactions
+        totalPerProduct-in-0.destination: transactions
+        totalPerProduct-in-1.destination: order.sell
+        latestPerProduct-in-0.destination: transactions
+        latestPerProduct-in-1.destination: order.sell
+      kafka:
+        streams:
+          binder:
+            functions:
+              transactions.applicationId: transactions
+              orders.applicationId: orders
+              total.applicationId: total
+              totalPerProduct.applicationId: totalPerProduct
+              latestPerProduct.applicationId: latestPerProduct
+          function:
+            definition: orders;transactions;total;totalPerProduct;latestPerProduct
