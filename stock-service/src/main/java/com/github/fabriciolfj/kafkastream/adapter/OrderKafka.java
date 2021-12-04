@@ -92,16 +92,25 @@ public class OrderKafka {
         KeyValueBytesStoreSupplier storeSupplier = Stores.persistentKeyValueStore(
                 "transactions-per-product-store");
         return (transactions, orders) -> transactions
-                .selectKey((k, v) -> v.getSellOrderId())
-                .join(orders.selectKey((k, v) -> v.getId()),
-                        (t, o) -> new TransactionTotalWithProduct(t, o.getProductId()),
-                        JoinWindows.of(Duration.ofSeconds(10)),
+                /* fazendo o joing da transacao com o pedido*/
+                .selectKey((k, v) -> v.getSellOrderId()) //pegando o id do pedido da transacao
+                .join(orders.selectKey((k, v) -> v.getId()), //pegando o pedido que possui o id igual ao id do pedido da transacao acima
+                        (transacao, pedido) -> new TransactionTotalWithProduct(transacao, pedido.getProductId()),
+
+                        JoinWindows.of(Duration.ofSeconds(10)),// quero informações em uma janela de 10 segundos
+
+                        //estamos usando para join o id (long), a classe transacao e pedido
                         StreamJoined.with(Serdes.Long(),
                                 new JsonSerde<>(Transaction.class),
                                 new JsonSerde<>(Order.class)))
+
+                //agrupa por id do produto a classe transacao total por produto (a  mesma que foi criada para no join)
                 .groupBy((k, v) -> v.getProductId(),
                         Grouped.with(Serdes.Integer(), new JsonSerde<>(TransactionTotalWithProduct.class)))
                 .aggregate(
+                        //k -> id
+                        //v -> valor que vamos recebendo do agrupamento
+                        //a -> o acumulador
                         TransactionTotal::new,
                         (k, v, a) -> {
                             a.setCount(a.getCount() + 1);
